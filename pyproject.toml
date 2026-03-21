@@ -13,7 +13,6 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3.12",
   "Topic :: Desktop Environment",
@@ -28,13 +27,20 @@ dependencies = [
   "pygetwindow",
 ]
 
+[project.urls]
+Homepage = "https://github.com/tsunamayo7/helix-pilot"
+Repository = "https://github.com/tsunamayo7/helix-pilot"
+Issues = "https://github.com/tsunamayo7/helix-pilot/issues"
+
 [project.optional-dependencies]
 clipboard = ["pyperclip"]
 monitor = ["pynput"]
-dev = ["pytest", "ruff"]
 
 [project.scripts]
 helix-pilot = "server:mcp.run"
+
+[dependency-groups]
+dev = ["pytest", "ruff", "build>=1.4.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
