@@ -84,6 +84,25 @@ Add to your Claude Code MCP settings (`.claude.json` or settings):
 }
 ```
 
+## Demo
+
+### Screenshot capture
+
+<img src="docs/demo/screenshot_chrome.png" alt="Screenshot captured by helix-pilot" width="800">
+
+### Status output
+
+```json
+{
+  "ok": true,
+  "helix_pilot_version": "2.0.0",
+  "ollama": { "available": true, "endpoint": "http://localhost:11434" },
+  "screen_size": [3840, 2160],
+  "safe_mode": true,
+  "visible_windows": ["Claude Code", "Google Chrome", "Windows PowerShell", "..."]
+}
+```
+
 ## Available Tools
 
 | Tool | Description |
