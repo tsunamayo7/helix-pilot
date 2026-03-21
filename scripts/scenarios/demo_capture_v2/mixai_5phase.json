@@ -1,0 +1,156 @@
+{
+  "name": "mixai_5phase",
+  "steps": [
+    {
+      "id": "open_mixai",
+      "command": "click",
+      "args": {
+        "x": 76,
+        "y": 50,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "shot_mixai_tab",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_01_tab"
+      }
+    },
+    {
+      "id": "find_input",
+      "command": "find",
+      "args": {
+        "description": "message input box or prompt input field",
+        "window": "Helix AI Studio"
+      },
+      "on_fail": "retry:2"
+    },
+    {
+      "id": "focus_input",
+      "command": "click",
+      "args": {
+        "x": "$find_input.x",
+        "y": "$find_input.y",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "type_prompt",
+      "command": "type",
+      "args": {
+        "text": "Compare the pros and cons of Python, Rust, and Go for building CLI tools. Use Claude for planning, local LLMs for each language analysis, then integrate the final answer.",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_prompt",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_02_prompt"
+      }
+    },
+    {
+      "id": "send_prompt",
+      "command": "hotkey",
+      "args": {
+        "keys": "return",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "wait_phase1",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 5,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_phase1",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_03_phase1"
+      }
+    },
+    {
+      "id": "wait_phase2",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 10,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_phase2",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_04_phase2"
+      }
+    },
+    {
+      "id": "wait_phase3",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 15,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_phase3",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_05_phase3"
+      }
+    },
+    {
+      "id": "wait_phase35",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 10,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_phase35",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_06_phase35"
+      }
+    },
+    {
+      "id": "wait_complete",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 15,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_complete",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "mix_07_complete"
+      }
+    },
+    {
+      "id": "verify_complete",
+      "command": "verify",
+      "args": {
+        "expected": "a completed multi-phase answer or final integrated summary is visible",
+        "window": "Helix AI Studio"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "ollama_endpoint": "http://localhost:11434",
+  "vision_model": "mistral-small3.2:latest",
+  "reasoning_model": "",
+  "user_idle_seconds": 3,
+  "operation_timeout": 30,
+  "vision_timeout": 60,
+  "safe_mode": true,
+  "execution_mode": "draft_only",
+  "default_site_policy": "helix_internal"
+}

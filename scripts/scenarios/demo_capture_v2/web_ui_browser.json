@@ -1,0 +1,63 @@
+{
+  "name": "web_ui_browser",
+  "steps": [
+    {
+      "id": "open_settings",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+8",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "shot_settings",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "web_01_settings"
+      }
+    },
+    {
+      "id": "open_browser",
+      "command": "browse",
+      "args": {
+        "instruction": "Open http://localhost:8500 in the browser and keep the page on the login or chat screen without submitting anything.",
+        "window": "Chrome"
+      },
+      "delay_after": 2,
+      "on_fail": "retry:1"
+    },
+    {
+      "id": "wait_browser",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 10,
+        "window": "Chrome"
+      }
+    },
+    {
+      "id": "shot_browser",
+      "command": "screenshot",
+      "args": {
+        "window": "Chrome",
+        "name": "web_02_browser"
+      }
+    },
+    {
+      "id": "describe_browser",
+      "command": "describe",
+      "args": {
+        "window": "Chrome"
+      }
+    },
+    {
+      "id": "shot_browser_detail",
+      "command": "screenshot",
+      "args": {
+        "window": "Chrome",
+        "name": "web_03_chat"
+      }
+    }
+  ]
+}

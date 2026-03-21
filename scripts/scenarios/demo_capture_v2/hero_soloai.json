@@ -1,0 +1,92 @@
+{
+  "name": "hero_soloai",
+  "steps": [
+    {
+      "id": "open_soloai",
+      "command": "click",
+      "args": {
+        "x": 231,
+        "y": 50,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2,
+      "on_fail": "retry:1"
+    },
+    {
+      "id": "shot_soloai",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "hero_01_soloai"
+      }
+    },
+    {
+      "id": "find_input",
+      "command": "find",
+      "args": {
+        "description": "message input box or chat input text area",
+        "window": "Helix AI Studio"
+      },
+      "on_fail": "retry:2"
+    },
+    {
+      "id": "focus_input",
+      "command": "click",
+      "args": {
+        "x": "$find_input.x",
+        "y": "$find_input.y",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "type_prompt",
+      "command": "type",
+      "args": {
+        "text": "Write a Python function that calculates fibonacci numbers with memoization",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_typed",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "hero_02_typed"
+      }
+    },
+    {
+      "id": "send_prompt",
+      "command": "hotkey",
+      "args": {
+        "keys": "return",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "wait_response",
+      "command": "wait-stable",
+      "args": {
+        "timeout": 20,
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "describe_response",
+      "command": "describe",
+      "args": {
+        "window": "Helix AI Studio"
+      }
+    },
+    {
+      "id": "shot_response",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "hero_03_response"
+      }
+    }
+  ]
+}

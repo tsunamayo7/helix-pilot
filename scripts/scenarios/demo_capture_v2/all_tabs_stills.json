@@ -1,0 +1,143 @@
+{
+  "name": "all_tabs_stills",
+  "steps": [
+    {
+      "id": "mixai_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+1",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "mixai_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_00_mixai"
+      }
+    },
+    {
+      "id": "soloai_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+2",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "soloai_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_01_soloai"
+      }
+    },
+    {
+      "id": "cloud_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+3",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "cloud_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_02_cloud_settings"
+      }
+    },
+    {
+      "id": "ollama_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+4",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "ollama_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_03_ollama_settings"
+      }
+    },
+    {
+      "id": "history_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+5",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "history_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_04_history"
+      }
+    },
+    {
+      "id": "rag_tab",
+      "command": "hotkey",
+      "args": {
+        "keys": "ctrl+6",
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "rag_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_05_rag"
+      }
+    },
+    {
+      "id": "vd_tab",
+      "command": "click",
+      "args": {
+        "x": 1115,
+        "y": 50,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "vd_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_06_virtual_desktop"
+      }
+    },
+    {
+      "id": "settings_tab",
+      "command": "click",
+      "args": {
+        "x": 1180,
+        "y": 50,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "settings_shot",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "tab_07_general_settings"
+      }
+    }
+  ]
+}

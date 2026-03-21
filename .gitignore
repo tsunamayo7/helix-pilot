@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets
+.env
+.claude/channels/
+
+# Runtime data
+data/
+logs/
+*.lock
+
+# IDE
+.idea/
+.vscode/
+
+# uv
+uv.lock

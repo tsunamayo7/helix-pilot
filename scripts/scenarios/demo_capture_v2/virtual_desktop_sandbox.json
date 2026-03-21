@@ -1,0 +1,95 @@
+{
+  "name": "virtual_desktop_sandbox",
+  "steps": [
+    {
+      "id": "open_vd",
+      "command": "click",
+      "args": {
+        "x": 1115,
+        "y": 50,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 2
+    },
+    {
+      "id": "shot_vd_tab",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "vd_01_tab"
+      }
+    },
+    {
+      "id": "open_settings_subtab",
+      "command": "click",
+      "args": {
+        "x": 144,
+        "y": 92,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_vd_settings",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "vd_02_settings"
+      }
+    },
+    {
+      "id": "open_desktop_subtab",
+      "command": "click",
+      "args": {
+        "x": 56,
+        "y": 92,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_desktop",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "vd_03_desktop"
+      }
+    },
+    {
+      "id": "click_reset",
+      "command": "click",
+      "args": {
+        "x": 430,
+        "y": 92,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_reset",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "vd_04_reset"
+      }
+    },
+    {
+      "id": "open_desktop_again",
+      "command": "click",
+      "args": {
+        "x": 56,
+        "y": 92,
+        "window": "Helix AI Studio"
+      },
+      "delay_after": 1
+    },
+    {
+      "id": "shot_final_desktop",
+      "command": "screenshot",
+      "args": {
+        "window": "Helix AI Studio",
+        "name": "vd_05_final_desktop"
+      }
+    }
+  ]
+}
