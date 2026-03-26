@@ -1,0 +1,65 @@
+{
+  "status": {
+    "ok": true,
+    "command": "status",
+    "helix_pilot_version": "2.0.0",
+    "lock": {
+      "locked": false
+    },
+    "ollama": {
+      "available": true,
+      "endpoint": "http://localhost:11434",
+      "message": "ok"
+    },
+    "reasoning_model": {
+      "name": "mistral-small3.2:latest",
+      "available": true,
+      "message": "same as vision_model"
+    },
+    "dependencies": {
+      "httpx": true,
+      "pynput": true,
+      "pyperclip": true
+    },
+    "dpi_info": {
+      "awareness_level": 1,
+      "scale_percent": 150,
+      "skip_dpi_set": false
+    },
+    "visible_windows": [
+      "システム トレイ オーバーフロー ウィンドウ。",
+      "⠐ Start new coding session",
+      "C:\\WINDOWS\\system32\\cmd.exe ",
+      "manual - エクスプローラー",
+      "付箋",
+      "LinkedIn",
+      "Browser Use CLI 2.0をローカルLLMで動かしたら完全無料でブラウザ自律操作できた話｜cute_agapan9087 - Google Chrome",
+      "生成AIアプリ - エクスプローラー",
+      "RustDesk",
+      "C:\\WINDOWS\\system32\\cmd.exe",
+      "設定",
+      "設定",
+      "ソフトウェアアップデート - Stream Deck",
+      "Windows 入力エクスペリエンス",
+      "NVIDIA GeForce Overlay",
+      "付箋",
+      "付箋",
+      "付箋",
+      "コマンド パレット",
+      "PowerToys Quick Access (Preview)"
+    ],
+    "screen_size": [
+      3840,
+      2160
+    ],
+    "user_monitoring": "pynput",
+    "emergency_stop_corner": "top-left",
+    "safe_mode": true
+  },
+  "windows_count": 22,
+  "screenshot": {
+    "ok": true,
+    "path": "C:\\Development\\tools\\helix-pilot\\data\\helix_pilot_screenshots\\demo_full.png"
+  },
+  "description_preview": "1. **Application Name and Window Title**:\n   - The main window appears to be a terminal or command prompt window with no specific title visible.\n   - There is a LinkedIn window titled \"See new job openings\".\n   - Another window titled \"今日のパズルゲーム\" (Today's Puzzle Game) is partially visible.\n   - A co"
+}

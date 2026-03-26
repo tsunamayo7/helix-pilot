@@ -40,11 +40,20 @@ Most GUI automation tools either require expensive cloud APIs, only support macO
 
 ## Demo
 
-### Screenshot capture & analysis
+### MCP Tool Calls in Action
 
-<img src="docs/demo/screenshot_chrome.png" alt="helix-pilot capturing and analyzing a Chrome window" width="800">
+![MCP Demo](docs/demo/mcp_demo.gif)
 
-### Status output
+AI agent calls helix-pilot tools via MCP: `status()` → `screenshot()` → `describe()` → `auto()`. The Vision LLM analyzes the screen and executes GUI actions autonomously.
+
+### Desktop Screenshot & Vision LLM Analysis
+
+<img src="docs/demo/screenshot_full_desktop.png" alt="helix-pilot capturing the full Windows desktop" width="800">
+
+helix-pilot captures the screen and sends it to a local Ollama Vision model for analysis. The model identifies windows, UI elements, and layout — all running locally with zero API cost.
+
+<details>
+<summary>Example <code>status()</code> output</summary>
 
 ```json
 {
@@ -56,6 +65,7 @@ Most GUI automation tools either require expensive cloud APIs, only support macO
   "visible_windows": ["Claude Code", "Google Chrome", "Windows PowerShell", "..."]
 }
 ```
+</details>
 
 ## Quick Start
 
