@@ -1,94 +1,48 @@
-# helix-pilot
+<p align="center">
+  <h1 align="center">helix-pilot</h1>
+  <p align="center">
+    <strong>GUI automation MCP server powered by local Vision LLM (Ollama)</strong>
+  </p>
+  <p align="center">
+    <a href="https://github.com/tsunamayo7/helix-pilot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tsunamayo7/helix-pilot?style=flat-square" alt="License"></a>
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.12+-blue?style=flat-square&logo=python&logoColor=white" alt="Python 3.12+"></a>
+    <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-compatible-green?style=flat-square" alt="MCP Compatible"></a>
+    <a href="https://ollama.com"><img src="https://img.shields.io/badge/Ollama-local%20Vision%20LLM-purple?style=flat-square" alt="Ollama"></a>
+    <a href="https://github.com/tsunamayo7/helix-pilot"><img src="https://img.shields.io/github/stars/tsunamayo7/helix-pilot?style=flat-square" alt="Stars"></a>
+  </p>
+</p>
 
-**GUI automation MCP server powered by local Vision LLM (Ollama).**
+---
 
-helix-pilot lets AI coding agents (Claude Code, Codex CLI, etc.) see and control your Windows desktop through the [Model Context Protocol](https://modelcontextprotocol.io). It captures screenshots, analyzes them with a local Ollama Vision model, and executes mouse/keyboard actions — all running on your machine with zero cloud dependency for the vision step.
+helix-pilot lets AI agents **see and control your Windows desktop** through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It captures screenshots, analyzes them with a local Ollama Vision model, and executes mouse/keyboard actions — **all running on your machine with zero cloud API cost**.
 
 ## Why helix-pilot?
 
-| Feature | helix-pilot | UI-TARS Desktop | Peekaboo | Cua |
-|---------|:-----------:|:---------------:|:--------:|:---:|
-| MCP server (CLI-native) | Yes | Partial | Yes | No |
-| Windows support | Yes | Yes | No (macOS) | No (VM) |
-| Local Vision LLM (Ollama) | Yes | No | Yes | No |
-| Host OS direct control | Yes | Yes | Yes | No (VM) |
-| Open source | Yes | Yes | Yes | Yes |
+Most GUI automation tools either require expensive cloud APIs, only support macOS, or run inside VMs. **helix-pilot is different:**
 
-## Features
+- **100% local** — Runs entirely on your machine via Ollama. No cloud API keys, no per-request charges, no data leaving your PC.
+- **Windows-native** — Direct host OS control via Win32 API. Not a VM, not a container — real desktop automation.
+- **MCP-native** — Built as a first-class MCP server. Works instantly with Claude Code, Codex CLI, Cursor, and any MCP client.
+- **Vision LLM powered** — Uses local vision models (Gemma 3, Mistral Small 3.2, etc.) to understand what's on screen, not brittle selectors.
+- **Safe by design** — Built-in action policies, secret detection, emergency stop, and user activity monitoring.
 
-- **15 MCP tools** — screenshot, click, type, hotkey, scroll, describe, find, verify, auto, browse, and more
-- **Vision LLM analysis** — uses Ollama vision models to understand screen content
-- **Autonomous execution** — `auto` and `browse` tools plan and execute multi-step GUI tasks
-- **Safety system** — action policies, secret detection, emergency stop, user activity monitoring
-- **4K/HiDPI support** — proper DPI awareness for high-resolution displays
+### Comparison with alternatives
 
-## Quick Start
-
-### Prerequisites
-
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (recommended) or pip
-- [Ollama](https://ollama.com) with a vision model installed
-- Windows 10/11
-
-### Install a Vision Model
-
-```bash
-ollama pull mistral-small3.2
-```
-
-### Install helix-pilot
-
-```bash
-git clone https://github.com/tsunamayo7/helix-pilot.git
-cd helix-pilot
-uv sync
-```
-
-### Configure
-
-Edit `config/helix_pilot.json`:
-
-```json
-{
-  "ollama_endpoint": "http://localhost:11434",
-  "vision_model": "mistral-small3.2:latest"
-}
-```
-
-### Add to Claude Code
-
-Add to your Claude Code MCP settings (`.claude.json` or settings):
-
-```json
-{
-  "mcpServers": {
-    "helix-pilot": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
-    }
-  }
-}
-```
-
-### Add to Codex CLI
-
-```json
-{
-  "mcpServers": {
-    "helix-pilot": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
-    }
-  }
-}
-```
+| Feature | helix-pilot | terminator | UI-TARS Desktop | Peekaboo | Cua |
+|---------|:-----------:|:----------:|:---------------:|:--------:|:---:|
+| MCP server (CLI-native) | **Yes** | No | Partial | Yes | No |
+| Windows host direct control | **Yes** | Yes | Yes | No (macOS) | No (VM) |
+| Local Vision LLM (Ollama) | **Yes** | No | No | Yes | No |
+| Zero cloud API cost | **Yes** | No | No | **Yes** | No |
+| Open WebUI integration | **Yes** | No | No | No | No |
+| Built-in safety system | **Yes** | No | No | No | Partial |
+| Open source (MIT) | **Yes** | Yes | Yes | Yes | Yes |
 
 ## Demo
 
-### Screenshot capture
+### Screenshot capture & analysis
 
-<img src="docs/demo/screenshot_chrome.png" alt="Screenshot captured by helix-pilot" width="800">
+<img src="docs/demo/screenshot_chrome.png" alt="helix-pilot capturing and analyzing a Chrome window" width="800">
 
 ### Status output
 
@@ -103,7 +57,141 @@ Add to your Claude Code MCP settings (`.claude.json` or settings):
 }
 ```
 
+## Quick Start
+
+### Prerequisites
+
+- **Python 3.12+**
+- **[uv](https://docs.astral.sh/uv/)** (recommended) or pip
+- **[Ollama](https://ollama.com)** with a vision model
+- **Windows 10/11**
+
+### 1. Install a Vision Model
+
+```bash
+ollama pull mistral-small3.2
+```
+
+> Other supported models: `gemma3:27b`, `llava`, `moondream`, or any Ollama vision model.
+
+### 2. Install helix-pilot
+
+```bash
+git clone https://github.com/tsunamayo7/helix-pilot.git
+cd helix-pilot
+uv sync
+```
+
+### 3. Configure
+
+Edit `config/helix_pilot.json`:
+
+```json
+{
+  "ollama_endpoint": "http://localhost:11434",
+  "vision_model": "mistral-small3.2:latest"
+}
+```
+
+### 4. Connect to your MCP client
+
+See [Compatible MCP Clients](#compatible-mcp-clients) below for setup instructions.
+
+## Compatible MCP Clients
+
+helix-pilot works with any MCP-compatible client. Here are tested configurations:
+
+<details>
+<summary><strong>Claude Code</strong></summary>
+
+Add to your Claude Code MCP settings (`.claude.json` or project settings):
+
+```json
+{
+  "mcpServers": {
+    "helix-pilot": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><strong>Codex CLI</strong></summary>
+
+Add to your Codex CLI MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "helix-pilot": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><strong>Cursor / Windsurf / VS Code (Copilot)</strong></summary>
+
+Add to your editor's MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "helix-pilot": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><strong>Open WebUI + Ollama (via MCPO)</strong></summary>
+
+helix-pilot works with [Open WebUI](https://github.com/open-webui/open-webui) and local Ollama models through [MCPO](https://github.com/open-webui/mcpo) (MCP-to-OpenAPI proxy).
+
+1. Install MCPO:
+
+```bash
+pip install mcpo
+```
+
+2. Create `mcpo_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "helix-pilot": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/helix-pilot", "run", "server.py"]
+    }
+  }
+}
+```
+
+3. Start the proxy:
+
+```bash
+mcpo --host 127.0.0.1 --port 8300 --config mcpo_config.json
+```
+
+4. In Open WebUI: **Admin Settings > External Tools > Add Server**
+   - Type: `OpenAPI`
+   - URL: `http://127.0.0.1:8300/helix-pilot`
+
+All 15 tools are now available to any Ollama model with function calling support (e.g. `gemma3:27b`, `qwen3.5:122b`).
+</details>
+
 ## Available Tools
+
+helix-pilot provides **15 MCP tools** for comprehensive GUI automation:
 
 | Tool | Description |
 |------|-------------|
@@ -125,7 +213,7 @@ Add to your Claude Code MCP settings (`.claude.json` or settings):
 
 ## Safety
 
-helix-pilot includes multiple safety layers:
+helix-pilot includes multiple safety layers to protect your system:
 
 - **Action policies** — configurable per-site allow/deny lists
 - **Immutable policy** — blocks secrets (API keys, tokens) from being typed
@@ -137,16 +225,16 @@ helix-pilot includes multiple safety layers:
 ## Architecture
 
 ```
-Claude Code / Codex CLI
+Claude Code / Codex CLI / Cursor       Open WebUI + Ollama
+    |                                       |
+    | MCP (stdio)                           | HTTP (via MCPO)
+    v                                       v
+server.py (FastMCP)  <------------->  MCPO proxy (optional)
     |
-    | MCP (stdio)
     v
-server.py (FastMCP)
+HelixPilot (src/pilot.py)
     |
-    v
-HelixPilot (scripts/helix_pilot.py)
-    |
-    +-- CoreOperations (PyAutoGUI + PyGetWindow)
+    +-- CoreOperations (PyAutoGUI + Win32 API)
     +-- VisionLLM (Ollama API via httpx)
     +-- SafetyGuard (policies + user monitoring)
     +-- ActionContract (policy evaluation)
@@ -158,6 +246,9 @@ HelixPilot (scripts/helix_pilot.py)
 # Run tests
 uv run python -m pytest tests/ -v
 
+# Lint
+uv run ruff check .
+
 # Syntax check
 uv run python -m py_compile server.py
 
@@ -165,6 +256,41 @@ uv run python -m py_compile server.py
 uv run python server.py
 ```
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
 ## License
 
-MIT
+[MIT](LICENSE) - feel free to use this in your own projects.
+
+---
+
+<p align="center">
+  If you find helix-pilot useful, please consider giving it a star!<br>
+  <a href="https://github.com/tsunamayo7/helix-pilot">
+    <img src="https://img.shields.io/github/stars/tsunamayo7/helix-pilot?style=social" alt="GitHub stars">
+  </a>
+</p>
+
+---
+
+<details>
+<summary>Japanese / &#26085;&#26412;&#35486;</summary>
+
+helix-pilot は、ローカルの Vision LLM (Ollama) を使って Windows デスクトップを AI エージェントが操作できる MCP サーバーです。
+
+**特徴:**
+- クラウド API 不要 - Ollama でローカル完結、API 費用ゼロ
+- Windows ネイティブ - ホスト OS を直接操作（VM ではない）
+- MCP 対応 - Claude Code、Codex CLI、Cursor 等ですぐ使える
+- 安全設計 - アクション制御、シークレット検出、緊急停止機能
+
+詳細は上記の英語ドキュメントをご覧ください。
+</details>
