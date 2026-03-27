@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 40px;
+    background: #0d1117;
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .diagram {
+    background: #161b22;
+    border-radius: 16px;
+    padding: 40px 50px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  h2 {
+    color: #58a6ff;
+    text-align: center;
+    margin: 0 0 30px 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .box {
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 140px;
+  }
+  .client {
+    background: #1f3a5f;
+    color: #79c0ff;
+    border: 1px solid #388bfd44;
+  }
+  .server {
+    background: #2a1f3f;
+    color: #d2a8ff;
+    border: 1px solid #8b5cf644;
+  }
+  .core {
+    background: #1f3f2a;
+    color: #7ee787;
+    border: 1px solid #3fb95044;
+  }
+  .engine {
+    background: #3f2a1f;
+    color: #ffa657;
+    border: 1px solid #d2922944;
+  }
+  .safety {
+    background: #3f1f1f;
+    color: #ff7b72;
+    border: 1px solid #f8514944;
+  }
+  .arrow {
+    text-align: center;
+    color: #8b949e;
+    font-size: 13px;
+    margin: 4px 0;
+    letter-spacing: 1px;
+  }
+  .arrow-label {
+    color: #8b949e;
+    font-size: 11px;
+  }
+  .divider {
+    border-top: 1px dashed #30363d;
+    margin: 20px 0;
+  }
+  .section-label {
+    color: #8b949e;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .sub-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sub-box {
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="diagram">
+  <h2>helix-pilot Architecture</h2>
+
+  <div class="section-label">MCP Clients</div>
+  <div class="row">
+    <div class="box client">Claude Code</div>
+    <div class="box client">Codex CLI</div>
+    <div class="box client">Cursor / VS Code</div>
+    <div class="box client">Open WebUI</div>
+  </div>
+
+  <div class="arrow">| MCP (stdio) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | HTTP (MCPO)</div>
+  <div class="arrow">v &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v</div>
+
+  <div class="divider"></div>
+  <div class="section-label">helix-pilot Server</div>
+
+  <div class="row">
+    <div class="box server" style="min-width: 300px;">
+      server.py (FastMCP)<br>
+      <span style="font-size:11px; color:#8b949e;">15 MCP Tools</span>
+    </div>
+  </div>
+
+  <div class="arrow">v</div>
+
+  <div class="row">
+    <div class="box core" style="min-width: 300px;">
+      HelixPilot (Orchestrator)<br>
+      <span style="font-size:11px; color:#8b949e;">Command routing + thread safety</span>
+    </div>
+  </div>
+
+  <div class="arrow">v</div>
+  <div class="divider"></div>
+  <div class="section-label">Core Components</div>
+
+  <div class="sub-boxes">
+    <div class="sub-box engine">
+      Vision LLM<br>
+      <span style="font-size:10px;">(Ollama API)</span>
+    </div>
+    <div class="sub-box engine">
+      CoreOperations<br>
+      <span style="font-size:10px;">(PyAutoGUI + Win32)</span>
+    </div>
+    <div class="sub-box engine">
+      AutoExecutor<br>
+      <span style="font-size:10px;">(Multi-step plans)</span>
+    </div>
+    <div class="sub-box engine">
+      ScreenCache<br>
+      <span style="font-size:10px;">(Deduplication)</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px;"></div>
+  <div class="sub-boxes">
+    <div class="sub-box safety">
+      SafetyGuard<br>
+      <span style="font-size:10px;">(Emergency stop + user monitor)</span>
+    </div>
+    <div class="sub-box safety">
+      ActionValidator<br>
+      <span style="font-size:10px;">(Plan safety check)</span>
+    </div>
+    <div class="sub-box safety">
+      ActionContract<br>
+      <span style="font-size:10px;">(Policy evaluation)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">External Dependencies</div>
+  <div class="sub-boxes">
+    <div class="sub-box client" style="background:#0d2137;">
+      Ollama<br>
+      <span style="font-size:10px;">localhost:11434</span>
+    </div>
+    <div class="sub-box client" style="background:#0d2137;">
+      Windows Desktop<br>
+      <span style="font-size:10px;">Win32 API</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
