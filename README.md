@@ -8,6 +8,7 @@
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.12+-blue?style=flat-square&logo=python&logoColor=white" alt="Python 3.12+"></a>
     <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-compatible-green?style=flat-square" alt="MCP Compatible"></a>
     <a href="https://ollama.com"><img src="https://img.shields.io/badge/Ollama-local%20Vision%20LLM-purple?style=flat-square" alt="Ollama"></a>
+    <a href="https://github.com/tsunamayo7/helix-pilot/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/tsunamayo7/helix-pilot/ci.yml?style=flat-square&label=CI" alt="CI"></a>
     <a href="https://github.com/tsunamayo7/helix-pilot"><img src="https://img.shields.io/github/stars/tsunamayo7/helix-pilot?style=flat-square" alt="Stars"></a>
   </p>
 </p>
@@ -35,7 +36,7 @@ Most GUI automation tools either require expensive cloud APIs, only support macO
 | Local Vision LLM (Ollama) | **Yes** | No | No | Yes | No |
 | Zero cloud API cost | **Yes** | No | No | **Yes** | No |
 | Open WebUI integration | **Yes** | No | No | No | No |
-| Built-in safety system | **Yes** | No | No | No | Partial |
+| Built-in safety system | **Yes** | Partial | No | No | Partial |
 | Open source (MIT) | **Yes** | Yes | Yes | Yes | Yes |
 
 ## Demo
@@ -297,10 +298,19 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 helix-pilot は、ローカルの Vision LLM (Ollama) を使って Windows デスクトップを AI エージェントが操作できる MCP サーバーです。
 
 **特徴:**
-- クラウド API 不要 - Ollama でローカル完結、API 費用ゼロ
-- Windows ネイティブ - ホスト OS を直接操作（VM ではない）
-- MCP 対応 - Claude Code、Codex CLI、Cursor 等ですぐ使える
-- 安全設計 - アクション制御、シークレット検出、緊急停止機能
+- **クラウド API 不要** — Ollama でローカル完結、API 費用ゼロ
+- **Windows ネイティブ** — ホスト OS を直接操作（VM ではない）
+- **MCP 対応** — Claude Code、Codex CLI、Cursor、VS Code 等ですぐ使える
+- **Vision LLM 駆動** — 画面をスクリーンショットし、ローカル Vision モデルで解析・操作
+- **安全設計** — アクション制御、シークレット検出、緊急停止、ユーザー操作検知
 
-詳細は上記の英語ドキュメントをご覧ください。
+**クイックスタート:**
+```bash
+ollama pull mistral-small3.2
+git clone https://github.com/tsunamayo7/helix-pilot.git
+cd helix-pilot && uv sync
+```
+
+MCP クライアント（Claude Code 等）に接続するだけで、15 個の GUI 自動化ツールが利用可能になります。
+詳細なセットアップ方法は上記の英語ドキュメントをご覧ください。
 </details>
