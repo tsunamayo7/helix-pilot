@@ -33,16 +33,13 @@ class TestLockManager(unittest.TestCase):
         info = lock.is_locked()
         self.assertFalse(info.get("locked"))
 
-    def test_double_acquire_by_same_process_succeeds(self):
-        # Same PID should be able to re-acquire (it's alive).
+    def test_double_acquire_by_same_process_blocked(self):
+        # Same PID is alive, so second acquire should fail.
         lock = _make_lock()
-        lock.acquire("op1", timeout=5)
-        # Same process re-acquires — PID is alive, but our own.
-        # The current implementation checks if PID is alive and blocks.
-        # This is expected behavior.
-        acquired = lock.acquire("op2", timeout=5)
-        # Either outcome is acceptable depending on timeout handling.
-        self.assertIsInstance(acquired, bool)
+        lock.acquire("op1", timeout=2)
+        acquired = lock.acquire("op2", timeout=2)
+        # Same process PID is alive, lock should not be granted.
+        self.assertFalse(acquired)
         lock.release()
 
     def test_release_without_acquire(self):
