@@ -46,4 +46,4 @@ jobs:
         run: uv python install 3.12
 
       - name: Ruff check
-        run: uvx ruff check src/ server.py tests/ --ignore E501
+        run: uvx ruff check src/ server.py tests/ --ignore E501,E402

@@ -36,7 +36,7 @@ class TestServerToolRegistration(unittest.TestCase):
         )
 
     def test_pilot_module_importable(self):
-        from src.pilot import create_pilot, PilotConfig
+        from src.pilot import create_pilot
         self.assertTrue(callable(create_pilot))
 
 
