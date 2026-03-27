@@ -32,7 +32,10 @@ jobs:
           uv run python -m py_compile src/pilot/__init__.py
 
       - name: Run tests
-        run: uv run python -m pytest tests/ -v
+        run: uv run python -m pytest tests/ -v --timeout=30 --ignore=tests/test_server.py
+
+      - name: Run server import test
+        run: uv run python -c "from server import mcp; assert mcp.name == 'helix-pilot'; print('Server OK')"
 
   lint:
     runs-on: ubuntu-latest

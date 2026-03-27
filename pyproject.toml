@@ -40,7 +40,7 @@ monitor = ["pynput"]
 helix-pilot = "server:mcp.run"
 
 [dependency-groups]
-dev = ["pytest", "ruff", "build>=1.4.0"]
+dev = ["pytest", "pytest-timeout", "ruff", "build>=1.4.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
