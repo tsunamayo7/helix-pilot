@@ -291,6 +291,8 @@ class PilotConfig:
                 "alt+f4", "ctrl+alt+delete", "ctrl+alt+del",
                 "win+r", "win+l", "alt+tab", "ctrl+shift+esc",
                 "ctrl+w", "ctrl+shift+delete",
+                "win+shift+s", "windows+shift+s",
+                "shift+win+s", "shift+windows+s",
             ],
             "denied_url_patterns": [
                 "file://", "chrome://settings", "about:config",
@@ -509,10 +511,23 @@ class SafetyGuard:
         self._poll_thread = None
 
     # --- Window validation ---
-    def validate_window(self, window_title: str) -> Tuple[bool, str]:
-        """Check if a window title is allowed."""
+    def validate_window(self, window_title: str,
+                        action: str = "") -> Tuple[bool, str]:
+        """Check if a window title is allowed.
+
+        Args:
+            window_title: Target window title pattern.
+            action: The action being performed. Read-only actions
+                    (screenshot, describe, find, verify, list-windows,
+                    status, wait-stable, resize, record) bypass the
+                    safe_mode window requirement so that observation
+                    commands work even without --window.
+        """
         if not window_title:
             if self._config.safe_mode:
+                # Read-only actions are allowed without --window even in safe_mode.
+                if action and action in READ_ONLY_ACTIONS:
+                    return True, "ok (read-only action bypass)"
                 return False, "safe_mode is on: --window argument required"
             return True, "ok"
 
@@ -732,13 +747,20 @@ class SafetyGuard:
         return since < self._config.user_idle_seconds
 
     # --- Pre-operation combined check ---
-    def pre_operation_check(self, window_title: str = None) -> Tuple[bool, str]:
-        """Run all safety checks before an operation."""
+    def pre_operation_check(self, window_title: str = None,
+                            action: str = "") -> Tuple[bool, str]:
+        """Run all safety checks before an operation.
+
+        Args:
+            window_title: Target window title pattern.
+            action: The action being performed (passed to validate_window
+                    so that read-only actions can bypass safe_mode).
+        """
         # Emergency stop
         self.check_emergency_stop()
 
         # Window validation
-        ok, reason = self.validate_window(window_title)
+        ok, reason = self.validate_window(window_title, action=action)
         if not ok:
             return False, reason
 
@@ -766,6 +788,15 @@ The screenshot is exactly {width} pixels wide and {height} pixels tall.
 The coordinate system starts at (0,0) in the top-left corner.
 The bottom-right corner is ({width},{height}).
 
+DISPLAY CONTEXT:
+- This is a Windows 11 desktop. The taskbar is at the BOTTOM CENTER of the screen.
+- On a full-desktop screenshot, the taskbar icons (Start, Search, Task View, pinned apps)
+  are centered horizontally along the bottom edge (y close to {height}).
+- Common resolutions: 3840x2160 (4K), 2560x1440 (QHD), 1920x1080 (FHD).
+  The current screenshot resolution is {width}x{height}.
+- On 4K (3840x2160): UI elements are physically small; coordinates must be very precise.
+- On FHD (1920x1080): UI elements are relatively larger.
+
 TASK: Find the UI element described as: "{description}"
 
 COORDINATE ESTIMATION RULES:
@@ -775,6 +806,12 @@ COORDINATE ESTIMATION RULES:
 4. For a tab bar near the top with 6 tabs evenly spaced across ~350px starting at x~15:
    - 1st tab center ≈ x=35, 2nd ≈ x=85, 3rd ≈ x=140, etc.
 5. Be very precise — even 20px error can cause a misclick
+6. SANITY CHECK: After estimating (x, y), verify the coordinate is plausible:
+   - Is x within [0, {width}]?  Is y within [0, {height}]?
+   - If the element is in the taskbar, y should be very close to {height} (bottom).
+   - If the element is a window title bar button, y should be near the top of that window.
+   - If x < 30 or x > {width}-30 or y < 30 or y > {height}-30, the element is at
+     the screen edge — double-check that this is correct.
 
 If you find the element, respond ONLY with this JSON (no other text):
 {{"found": true, "x": <center_x_integer>, "y": <center_y_integer>, "confidence": "high|medium|low", "description": "<what you found>"}}
@@ -786,6 +823,7 @@ IMPORTANT:
 - x and y must be INTEGER pixel coordinates of the CENTER of the element
 - Coordinates are relative to the screenshot (0,0 is top-left)
 - Double-check your x coordinate: is it roughly the correct fraction of {width}?
+- Double-check your y coordinate: is it roughly the correct fraction of {height}?
 - confidence: "high" = clearly visible and matches, "medium" = likely match, "low" = uncertain
 - Only respond with the JSON object, no other text"""
 
@@ -1557,7 +1595,7 @@ class ActionValidator:
 
     ALLOWED_ACTIONS = {
         "click_element", "type_text", "hotkey", "scroll",
-        "wait", "wait_stable", "verify",
+        "wait", "wait_stable", "screenshot", "verify",
         "navigate_url", "wait_page_load",
     }
 
@@ -1692,6 +1730,8 @@ AUTO_PLANNER_SYSTEM_PROMPT = """You are a precise GUI automation planner.
 Given a screenshot of a desktop application and a user instruction,
 output a JSON array of atomic GUI steps.
 
+Today's date is __TODAY__. If the user says "today", use this exact date.
+
 Available actions:
 - {"action": "click_element", "target": "<natural language description of element>"}
 - {"action": "type_text", "text": "<text to type>"}
@@ -1699,6 +1739,7 @@ Available actions:
 - {"action": "scroll", "amount": <int, positive=up, negative=down>}
 - {"action": "wait", "seconds": <float>}
 - {"action": "wait_stable", "timeout": <int>}
+- {"action": "screenshot", "name": "<optional filename stem>"}
 - {"action": "verify", "expected": "<description of expected outcome>"}
 
 Rules:
@@ -1706,7 +1747,12 @@ Rules:
 2. Add a verify step as the LAST step to confirm the task is complete
 3. Keep plans minimal - do not add unnecessary waits or extra steps
 4. If typing into a field, click it first to focus it
-5. Output ONLY the JSON array, no explanation text"""
+5. If the task asks to take a screenshot, use the screenshot action instead of OS snipping tools or screenshot hotkeys
+6. Do not use Windows/system screenshot shortcuts like win+shift+s
+7. After launching a new application or opening a new window, ALWAYS add a wait_stable step
+   (e.g. {{"action": "wait_stable", "timeout": 10}}) so the window fully renders before
+   subsequent actions. Do NOT interact with a window that may still be loading.
+8. Output ONLY the JSON array, no explanation text"""
 
 BROWSE_PLANNER_ADDITIONS = """
 Additional browser actions:
@@ -1732,7 +1778,8 @@ class ActionPlanner:
     def plan(self, instruction: str, screenshot_path: Path,
              mode: str = "auto") -> list:
         """Generate action plan from instruction + screenshot."""
-        system_prompt = AUTO_PLANNER_SYSTEM_PROMPT
+        today = datetime.now().strftime("%Y-%m-%d")
+        system_prompt = AUTO_PLANNER_SYSTEM_PROMPT.replace("__TODAY__", today)
         if mode == "browse":
             system_prompt += BROWSE_PLANNER_ADDITIONS
 
@@ -1893,6 +1940,25 @@ class AutoExecutor:
 
             if result.get("ok"):
                 succeeded += 1
+
+                # Implicit wait_stable after actions that launch apps or
+                # navigate to new pages, unless the NEXT step is already
+                # wait / wait_stable / wait_page_load.
+                _launch_like = False
+                if action == "navigate_url":
+                    _launch_like = True
+                elif action == "hotkey":
+                    _keys = step.get("keys", "").lower()
+                    if "win" in _keys or "enter" in _keys:
+                        _launch_like = True
+                if _launch_like:
+                    next_action = ""
+                    if i + 1 < len(steps):
+                        next_action = steps[i + 1].get("action", "")
+                    if next_action not in ("wait", "wait_stable", "wait_page_load"):
+                        self._pilot.plogger.log_info(
+                            f"AUTO: implicit wait_stable after {action}")
+                        self._pilot.ops.wait_stable(10, window)
                 if action == "verify":
                     final_verify = {
                         "success": result.get("success", False),
@@ -1935,8 +2001,29 @@ class AutoExecutor:
         }
 
     def _execute_step(self, step: dict, window: str) -> dict:
-        """Execute a single planned step."""
+        """Execute a single planned step.
+
+        Before each action that interacts with a window, verify the
+        target window still exists via list_windows. This prevents
+        actions on windows that have been closed or not yet opened.
+        """
         action = step.get("action", "")
+
+        # Pre-step: verify target window exists for GUI-interactive actions
+        _window_actions = {
+            "click_element", "type_text", "hotkey", "scroll",
+            "screenshot", "verify", "navigate_url", "wait_page_load",
+        }
+        if window and action in _window_actions:
+            try:
+                self._pilot.safety.find_target_window(window)
+            except PilotWindowNotFoundError:
+                return {
+                    "ok": False,
+                    "error": f"Target window '{window}' not found before "
+                             f"executing {action}. It may have been closed "
+                             f"or not yet opened.",
+                }
 
         if action == "click_element":
             target = step.get("target", "")
@@ -1977,6 +2064,13 @@ class AutoExecutor:
         elif action == "wait_stable":
             timeout = min(step.get("timeout", 30), 120)
             return self._pilot.ops.wait_stable(timeout, window)
+
+        elif action == "screenshot":
+            raw_name = str(step.get("name", "")).strip() or "auto_capture"
+            safe_name = re.sub(r"[^A-Za-z0-9_-]+", "_", raw_name).strip("_")
+            if not safe_name:
+                safe_name = "auto_capture"
+            return self._pilot.ops.screenshot(window, safe_name)
 
         elif action == "verify":
             expected = step.get("expected", "")
@@ -2086,8 +2180,8 @@ class HelixPilot:
             self.indicator.show(command)
 
         try:
-            # Safety pre-check
-            ok, reason = self.safety.pre_operation_check(window_title)
+            # Safety pre-check (pass command so read-only actions bypass safe_mode)
+            ok, reason = self.safety.pre_operation_check(window_title, action=command)
             if not ok:
                 return {
                     "ok": False, "command": command,
@@ -2321,6 +2415,29 @@ class HelixPilot:
                     raw_y = refine_result["y"]
                     refined = True
 
+            # Edge/corner re-verification: if the found coordinates are
+            # at the extreme edges of the screenshot, automatically refine
+            # to reduce misclicks caused by imprecise edge estimates.
+            edge_reverified = False
+            if result.get("found") and not refined:
+                ss_size = ss.get("size", [0, 0])
+                ss_w = ss_size[0] if ss_size else 0
+                ss_h = ss_size[1] if len(ss_size) > 1 else 0
+                edge_margin = 30  # pixels
+                at_edge = (
+                    (raw_x < edge_margin) or
+                    (raw_y < edge_margin) or
+                    (ss_w > 0 and raw_x > ss_w - edge_margin) or
+                    (ss_h > 0 and raw_y > ss_h - edge_margin)
+                )
+                if at_edge:
+                    refine_result = self._refine_find(
+                        Path(ss["path"]), description, raw_x, raw_y)
+                    if refine_result and refine_result.get("found"):
+                        raw_x = refine_result["x"]
+                        raw_y = refine_result["y"]
+                        edge_reverified = True
+
             win_x = int(raw_x * scale)
             win_y = int(raw_y * scale)
             elapsed = round(time.time() - t0, 1)
@@ -2339,6 +2456,7 @@ class HelixPilot:
                 "vision_model": self.config.vision_model,
                 "vision_elapsed": elapsed,
                 "refined": refined,
+                "edge_reverified": edge_reverified,
             }
 
         return self._with_lock(
@@ -2454,7 +2572,7 @@ class HelixPilot:
             "safe_mode": self.config.safe_mode,
         })
 
-    def _collect_visible_windows(self) -> list:
+    def _collect_visible_windows(self, detailed: bool = False) -> list:
         try:
             all_wins = gw.getAllWindows()
             visible = []
@@ -2462,7 +2580,18 @@ class HelixPilot:
                 try:
                     title = w.title
                     if title.strip() and w.width > 100 and w.height > 100:
-                        visible.append(title.encode("utf-8", errors="replace").decode("utf-8"))
+                        safe_title = title.encode(
+                            "utf-8", errors="replace").decode("utf-8")
+                        if detailed:
+                            visible.append({
+                                "title": safe_title,
+                                "left": int(getattr(w, "left", 0)),
+                                "top": int(getattr(w, "top", 0)),
+                                "width": int(getattr(w, "width", 0)),
+                                "height": int(getattr(w, "height", 0)),
+                            })
+                        else:
+                            visible.append(safe_title)
                 except Exception:
                     continue
             return visible
@@ -2470,12 +2599,13 @@ class HelixPilot:
             return []
 
     def cmd_list_windows(self) -> dict:
-        """Read-only command: visible window list only."""
+        """Read-only command: visible window titles plus geometry."""
         return self.formatter.format({
             "ok": True,
             "command": "list-windows",
             "timestamp": self._now(),
             "visible_windows": self._collect_visible_windows(),
+            "windows": self._collect_visible_windows(detailed=True),
         })
 
     def _check_approvals(self, required_scopes: set[str]) -> tuple[bool, str]:
@@ -2785,7 +2915,7 @@ class HelixPilot:
             return result
         self.indicator.show("record")
         try:
-            ok, reason = self.safety.pre_operation_check(window)
+            ok, reason = self.safety.pre_operation_check(window, action="record")
             if not ok:
                 result["error"] = reason
                 return result
@@ -2988,7 +3118,7 @@ class HelixPilot:
             result["error"] = "Another helix_pilot instance is running"
             return self.formatter.format(result)
         try:
-            ok, reason = self.safety.pre_operation_check(window)
+            ok, reason = self.safety.pre_operation_check(window, action="auto")
             if not ok:
                 result["error"] = reason
                 return self.formatter.format(result)
@@ -3027,7 +3157,7 @@ class HelixPilot:
             result["error"] = "Another helix_pilot instance is running"
             return self.formatter.format(result)
         try:
-            ok, reason = self.safety.pre_operation_check(window)
+            ok, reason = self.safety.pre_operation_check(window, action="browse")
             if not ok:
                 result["error"] = reason
                 return self.formatter.format(result)
