@@ -62,6 +62,7 @@ helix-pilot captures the screen and sends it to a local Ollama Vision model for 
   "helix_pilot_version": "2.0.0",
   "ollama": { "available": true, "endpoint": "http://localhost:11434" },
   "screen_size": [3840, 2160],
+  "agent_runtime": { "tracked_agents": 1, "running_agents": 0 },
   "safe_mode": true,
   "visible_windows": ["Claude Code", "Google Chrome", "Windows PowerShell", "..."]
 }
@@ -197,12 +198,12 @@ mcpo --host 127.0.0.1 --port 8300 --config mcpo_config.json
    - Type: `OpenAPI`
    - URL: `http://127.0.0.1:8300/helix-pilot`
 
-All 15 tools are now available to any Ollama model with function calling support (e.g. `gemma3:27b`, `qwen3.5:122b`).
+All 20 tools are now available to any Ollama model with function calling support (e.g. `gemma3:27b`, `qwen3.5:122b`).
 </details>
 
 ## Available Tools
 
-helix-pilot provides **15 MCP tools** for comprehensive GUI automation:
+helix-pilot provides **20 MCP tools** for comprehensive GUI automation:
 
 | Tool | Description |
 |------|-------------|
@@ -221,6 +222,21 @@ helix-pilot provides **15 MCP tools** for comprehensive GUI automation:
 | `browse` | Browser-specialized automation |
 | `click_screenshot` | Click then immediately screenshot |
 | `resize_image` | Resize image for AI model size limits |
+| `spawn_pilot_agent` | Launch a background GUI worker with `default` / `explorer` / `worker` roles |
+| `send_pilot_agent_input` | Continue the same GUI worker with a follow-up instruction |
+| `wait_pilot_agent` | Wait for the current agent turn and fetch the last result |
+| `list_pilot_agents` | Inspect tracked background GUI agents |
+| `close_pilot_agent` | Close an idle GUI agent |
+
+## Claude Code-Style Agents
+
+The new lifecycle tools let Claude Code treat helix-pilot as a persistent GUI worker instead of only as one-shot tool calls.
+
+- Use `spawn_pilot_agent` to start a background agent in `auto` or `browse` mode.
+- Role presets map naturally to Claude Code delegation:
+  `default` for general execution, `explorer` for observation-first `dry_run` planning, `worker` for direct execution.
+- Use `send_pilot_agent_input` to continue the same worker with accumulated GUI context.
+- Use `wait_pilot_agent`, `list_pilot_agents`, and `close_pilot_agent` to coordinate long-running desktop tasks.
 
 ## Safety
 
