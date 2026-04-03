@@ -295,8 +295,10 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## Related Projects
 
-- [helix-agent](https://github.com/tsunamayo7/helix-agent) — Extend Claude Code with local Ollama models (intelligent auto-routing)
-- [helix-sandbox](https://github.com/tsunamayo7/helix-sandbox) — Windows Sandbox MCP server
+- [helix-ai-studio](https://github.com/tsunamayo7/helix-ai-studio) — All-in-one AI chat studio with 7 providers, RAG, MCP tools, and pipeline
+- [helix-agent](https://github.com/tsunamayo7/helix-agent) — Extend Claude Code with local Ollama models — cut token costs by 60-80%
+- [claude-code-codex-agents](https://github.com/tsunamayo7/claude-code-codex-agents) — MCP bridge to Codex CLI (GPT-5.4) with structured JSONL traces
+- [helix-sandbox](https://github.com/tsunamayo7/helix-sandbox) — Secure sandbox MCP server — Docker + Windows Sandbox
 
 ## License
 
@@ -332,6 +334,6 @@ git clone https://github.com/tsunamayo7/helix-pilot.git
 cd helix-pilot && uv sync
 ```
 
-MCP クライアント（Claude Code 等）に接続するだけで、15 個の GUI 自動化ツールが利用可能になります。
+MCP クライアント（Claude Code 等）に接続するだけで、20 個の GUI 自動化ツールが利用可能になります。
 詳細なセットアップ方法は上記の英語ドキュメントをご覧ください。
 </details>
