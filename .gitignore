@@ -12,6 +12,7 @@ wheels/
 # Secrets
 .env
 .claude/channels/
+.claude/settings.local.json
 
 # Runtime data
 data/

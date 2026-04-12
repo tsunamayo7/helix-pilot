@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "helix-pilot": {
+      "command": "uv",
+      "args": ["--directory", "C:/Development/tools/helix-pilot", "run", "server.py"]
+    }
+  }
+}
