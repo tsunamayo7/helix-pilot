@@ -1,6 +1,6 @@
 [project]
 name = "helix-pilot"
-version = "1.0.0"
+version = "2.0.0"
 description = "GUI automation MCP server powered by local Vision LLM (Ollama)"
 readme = "README.md"
 requires-python = ">=3.12"
